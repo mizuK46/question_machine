@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="theme-color" content="#6d5b97">
+<title>テスト対策</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f6f2ec;
+    --paper: #fffefb;
+    --ink: #2a2a2a;
+    --accent: #6d5b97;
+    --accent-soft: #e7dff5;
+    --ok: #2e7d52;
+    --ok-soft: #dff3e7;
+    --ng: #c13b3b;
+    --ng-soft: #fbe3e3;
+    --muted: #8a8579;
+    --line: #e4ddd0;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; background: var(--bg); color: var(--ink);
+    font-family: "Noto Sans JP", system-ui, sans-serif; font-size: 16px; line-height: 1.75; }
+  a { color: var(--accent); }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 20px 16px 80px; }
+  header.site { display:flex; align-items:baseline; justify-content:space-between;
+    padding: 18px 2px 12px; border-bottom: 1px dashed var(--line); margin-bottom: 18px;}
+  header.site h1 { font-family:"Noto Serif JP",serif; font-size: 20px; margin:0; letter-spacing:.08em; }
+  header.site .sub { color: var(--muted); font-size: 12px; }
+  button, .btn { font: inherit; cursor:pointer; border: 0; }
+  .btn {
+    display:inline-flex; align-items:center; justify-content:center; gap:6px;
+    padding: 10px 16px; border-radius: 10px; background: var(--paper);
+    border: 1px solid var(--line); color: var(--ink);
+    transition: transform .08s ease, background .15s ease, border-color .15s ease;
+  }
+  .btn:hover { background: #fff; border-color: #c9bfae; }
+  .btn:active { transform: translateY(1px); }
+  .btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .btn.primary:hover { background: #5c4b86; border-color:#5c4b86; }
+  .btn.ghost { background: transparent; }
+  .chapter-list { display:grid; gap:10px; }
+  .chapter-card {
+    background: var(--paper); border: 1px solid var(--line); border-radius: 12px;
+    padding: 14px 16px; display:flex; align-items:center; justify-content:space-between;
+    cursor: pointer; transition: border-color .15s ease, background .15s ease;
+  }
+  .chapter-card:hover { border-color: var(--accent); background: #fff; }
+  .chapter-card .name { font-weight: 700; font-size: 17px; }
+  .chapter-card .meta { color: var(--muted); font-size: 12px; margin-top: 3px;}
+  .bar { height: 6px; background: #ece6db; border-radius: 4px; overflow: hidden; width: 120px; }
+  .bar > div { height: 100%; background: var(--accent); transition: width .3s ease;}
+  .chapter-actions { display:flex; gap:8px; margin-top: 12px; flex-wrap: wrap; }
+  .muted { color: var(--muted); }
+  .q-head { display:flex; align-items:baseline; justify-content:space-between; margin-bottom: 10px; }
+  .q-head .qnum { font-family:"Noto Serif JP",serif; font-size: 22px; font-weight: 700; }
+  .q-head .qof { color: var(--muted); font-size: 13px; }
+  .q-body {
+    background: var(--paper); border: 1px solid var(--line); border-radius: 14px;
+    padding: 18px 18px 16px; white-space: pre-wrap; word-break: break-word;
+    font-size: 15.5px; line-height: 1.85;
+    background-image: linear-gradient(transparent 31px, #f0ebe0 31px);
+    background-size: 100% 32px;
+  }
+  .choices { display:grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 14px; }
+  .choices button {
+    background: var(--paper); border:1px solid var(--line); border-radius: 12px;
+    padding: 14px 0; font-size: 18px; font-weight: 700; color: var(--ink);
+    transition: transform .08s ease, background .15s ease, border-color .15s ease;
+  }
+  .choices button:hover { background: #fff; border-color: var(--accent); color: var(--accent); }
+  .choices button:active { transform: translateY(1px); }
+  .choices button.picked { background: var(--accent-soft); border-color: var(--accent); color: var(--accent);}
+  .choices button.correct { background: var(--ok-soft); border-color: var(--ok); color: var(--ok);}
+  .choices button.wrong { background: var(--ng-soft); border-color: var(--ng); color: var(--ng);}
+  .dontknow { margin-top: 8px; }
+  .result {
+    margin-top: 16px; padding: 14px 16px; border-radius: 12px;
+    border: 1px solid var(--line); background: var(--paper);
+  }
+  .result.ok { border-color: var(--ok); background: var(--ok-soft);}
+  .result.ng { border-color: var(--ng); background: var(--ng-soft);}
+  .result .rh { font-weight: 700; margin-bottom: 6px; }
+  .result .expl { white-space: pre-wrap; word-break: break-word; color:#3a3a3a; font-size: 14.5px; line-height: 1.8;}
+  .nav { display:flex; gap:8px; justify-content: space-between; margin-top: 18px;}
+  .nav .right { display:flex; gap:8px; }
+  .crumbs { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+  .crumbs a { cursor:pointer; text-decoration: underline dotted;}
+  .summary { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 20px; text-align: center; }
+  .summary h2 { font-family:"Noto Serif JP",serif; margin: 0 0 6px; }
+  .summary .score { font-size: 42px; font-weight: 700; color: var(--accent); margin: 6px 0;}
+  .pill {
+    display:inline-block; padding: 2px 10px; border-radius: 999px; font-size: 11px;
+    background: var(--accent-soft); color: var(--accent); margin-left: 6px; font-weight: 700;
+  }
+  .pill.warn { background:#fff4d5; color:#8a6a00;}
+  .toast {
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+    background: #2a2a2a; color:#fff; padding: 10px 18px; border-radius:999px; font-size:13px;
+    opacity: 0; pointer-events: none; transition: opacity .2s ease;
+  }
+  .toast.show { opacity: .95; }
+  .empty { color: var(--muted); font-style: italic; padding: 8px 0;}
+  .footer-note { color: var(--muted); font-size: 11px; text-align:center; margin-top: 28px; }
+  @media (max-width: 500px) {
+    .choices { grid-template-columns: repeat(5, 1fr); gap: 6px;}
+    .choices button { padding: 12px 0; font-size: 16px;}
+    .q-body { padding: 14px; font-size: 15px;}
+    .chapter-card { padding: 12px; }
+    .bar { width: 80px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="site">
+    <h1>テスト対策</h1>
+    <span class="sub" id="site-sub"></span>
+  </header>
+  <main id="app">読み込み中…</main>
+  <div class="footer-note">進捗はこの端末のブラウザに自動保存されます。</div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+/* === 状態 === */
+const STORAGE_KEY = 'soumu-quiz-progress-v1';
+let DATA = null;
+let state = {
+  view: 'home',        // 'home' | 'quiz' | 'summary'
+  chapterIdx: 0,
+  qIdx: 0,
+  mode: 'all',         // 'all' | 'review'
+  reviewPool: [],      // 復習モード時の問番号リスト
+};
+let progress = loadProgress();
+
+function loadProgress() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
+  catch(e){ return {}; }
+}
+function saveProgress(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(progress)); }
+function chapKey(c){ return c.name; }
+function qProg(chap, qnum) {
+  const k = chapKey(chap);
+  progress[k] = progress[k] || {};
+  progress[k][qnum] = progress[k][qnum] || {attempts:0, correct:null, lastAnswer:null};
+  return progress[k][qnum];
+}
+function chapStats(chap) {
+  const p = progress[chap.name] || {};
+  let answered=0, correct=0, wrong=0;
+  for (const q of chap.questions) {
+    const pr = p[q.num];
+    if (!pr || pr.correct === null) continue;
+    answered++;
+    if (pr.correct) correct++; else wrong++;
+  }
+  return {answered, correct, wrong, total: chap.questions.length};
+}
+function wrongNums(chap){
+  const p = progress[chap.name] || {};
+  return chap.questions
+    .filter(q => p[q.num] && p[q.num].correct === false)
+    .map(q => q.num);
+}
+
+/* === ビュー === */
+const app = document.getElementById('app');
+function render(){
+  if (state.view === 'home') return renderHome();
+  if (state.view === 'quiz') return renderQuiz();
+  if (state.view === 'summary') return renderSummary();
+}
+
+function renderHome(){
+  const total = DATA.chapters.reduce((s,c)=>s+c.questions.length, 0);
+  let doneAll = 0, correctAll = 0;
+  for (const c of DATA.chapters){
+    const s = chapStats(c); doneAll += s.answered; correctAll += s.correct;
+  }
+  let html = `
+    <div style="margin-bottom:18px; color:var(--muted); font-size:13px;">
+      全${DATA.chapters.length}章・${total}問
+      <span class="pill">解答済 ${doneAll} / ${total}</span>
+      <span class="pill" style="background:var(--ok-soft);color:var(--ok)">正解 ${correctAll}</span>
+    </div>
+    <div class="chapter-list">`;
+  DATA.chapters.forEach((c, i) => {
+    const s = chapStats(c);
+    const pct = s.total ? Math.round(s.answered / s.total * 100) : 0;
+    const wrongCount = s.wrong;
+    html += `
+      <div class="chapter-card" data-i="${i}">
+        <div style="min-width:0; flex:1;">
+          <div class="name">${escapeHtml(c.name)}</div>
+          <div class="meta">
+            全${s.total}問 ・ ${s.answered ? `解答${s.answered}問 / 正解${s.correct}問` : '未着手'}
+            ${wrongCount ? `<span class="pill warn">要復習 ${wrongCount}</span>` : ''}
+          </div>
+        </div>
+        <div class="bar" title="${pct}%"><div style="width:${pct}%"></div></div>
+      </div>`;
+  });
+  html += `</div>
+    <div class="chapter-actions">
+      <button class="btn ghost" id="reset-btn">進捗リセット</button>
+    </div>`;
+  app.innerHTML = html;
+  app.querySelectorAll('.chapter-card').forEach(el => {
+    el.addEventListener('click', () => openChapter(parseInt(el.dataset.i)));
+  });
+  document.getElementById('reset-btn').addEventListener('click', () => {
+    if (confirm('すべての学習進捗をリセットしますか？')) {
+      progress = {}; saveProgress(); render();
+    }
+  });
+  document.getElementById('site-sub').textContent = '';
+}
+
+function openChapter(i){
+  const c = DATA.chapters[i];
+  const wrong = wrongNums(c);
+  const s = chapStats(c);
+  // 章が全問解答済み & 間違いがあれば復習モード誘導
+  state.chapterIdx = i;
+  state.mode = 'all';
+  state.reviewPool = [];
+  state.qIdx = 0;
+
+  if (s.answered === s.total && wrong.length > 0) {
+    if (confirm(`${c.name}：全${s.total}問解答済み（誤答${wrong.length}問）。\n\n「OK」→ 間違えた問題だけ復習\n「キャンセル」→ 最初から全問やり直し`)) {
+      state.mode = 'review';
+      state.reviewPool = wrong;
+    }
+  } else if (wrong.length > 0 && s.answered > 0) {
+    if (confirm(`${c.name}：誤答が ${wrong.length}問あります。\n\n「OK」→ 間違えた問題だけ復習\n「キャンセル」→ 続きから`)) {
+      state.mode = 'review';
+      state.reviewPool = wrong;
+    }
+  }
+  state.view = 'quiz';
+  render();
+}
+
+function currentQuestion() {
+  const c = DATA.chapters[state.chapterIdx];
+  if (state.mode === 'review') {
+    const qnum = state.reviewPool[state.qIdx];
+    return c.questions.find(q => q.num === qnum);
+  }
+  return c.questions[state.qIdx];
+}
+function totalQ() {
+  return state.mode === 'review' ? state.reviewPool.length : DATA.chapters[state.chapterIdx].questions.length;
+}
+
+function renderQuiz(){
+  const c = DATA.chapters[state.chapterIdx];
+  const q = currentQuestion();
+  if (!q) { state.view='summary'; render(); return; }
+  document.getElementById('site-sub').textContent = c.name + (state.mode === 'review' ? '（復習）' : '');
+  const pr = qProg(c, q.num);
+  const answered = pr.correct !== null;
+  const correctAvailable = q.correct != null;
+
+  let choicesHtml = '';
+  for (let i=1;i<=5;i++){
+    let cls = '';
+    if (answered) {
+      if (i === q.correct) cls = 'correct';
+      else if (i === pr.lastAnswer) cls = 'wrong';
+    }
+    choicesHtml += `<button data-c="${i}" class="${cls}">${i}</button>`;
+  }
+
+  let resultHtml = '';
+  if (answered) {
+    const ok = pr.correct;
+    resultHtml = `
+      <div class="result ${ok?'ok':'ng'}">
+        <div class="rh">
+          ${ok ? '正解 ✓' : '不正解 ✗'}
+          ${correctAvailable ? `— 正解は <b>${q.correct}</b>` : ''}
+          ${pr.attempts>1 ? `<span class="pill">${pr.attempts}回目</span>`:''}
+        </div>
+        <div class="expl">${escapeHtml(q.explanation || '（解説なし）')}</div>
+      </div>`;
+  } else if (!correctAvailable) {
+    resultHtml = `
+      <div class="result">
+        <div class="rh muted">この問は元資料に解答が無いため、正誤判定できません。</div>
+        <div class="expl">${escapeHtml(q.explanation || '')}</div>
+      </div>`;
+  }
+
+  app.innerHTML = `
+    <div class="crumbs"><a id="home-link">← 章一覧</a></div>
+    <div class="q-head">
+      <span class="qnum">問 ${q.num}</span>
+      <span class="qof">${state.qIdx+1} / ${totalQ()}</span>
+    </div>
+    <div class="q-body">${escapeHtml(q.body)}</div>
+    <div class="choices">${choicesHtml}</div>
+    ${!answered && correctAvailable ? `<div class="dontknow"><button class="btn ghost" id="skip-btn">わからない（解答を見る）</button></div>` : ''}
+    ${resultHtml}
+    <div class="nav">
+      <button class="btn" id="prev-btn" ${state.qIdx===0?'disabled style="opacity:.4;cursor:default"':''}>← 前へ</button>
+      <div class="right">
+        ${answered ? `<button class="btn primary" id="next-btn">${state.qIdx+1 < totalQ() ? '次へ →' : '結果を見る →'}</button>` : ''}
+      </div>
+    </div>`;
+
+  document.getElementById('home-link').onclick = () => { state.view='home'; render(); };
+  app.querySelectorAll('.choices button').forEach(b => {
+    b.onclick = () => {
+      if (pr.correct !== null) return; // already answered
+      const picked = parseInt(b.dataset.c);
+      pr.lastAnswer = picked;
+      pr.attempts = (pr.attempts||0) + 1;
+      pr.correct = (picked === q.correct);
+      saveProgress();
+      render();
+    };
+  });
+  const skipBtn = document.getElementById('skip-btn');
+  if (skipBtn) skipBtn.onclick = () => {
+    pr.lastAnswer = 0;
+    pr.attempts = (pr.attempts||0) + 1;
+    pr.correct = false;
+    saveProgress();
+    render();
+  };
+  const prev = document.getElementById('prev-btn');
+  if (prev) prev.onclick = () => { if (state.qIdx>0){ state.qIdx--; render(); } };
+  const nxt = document.getElementById('next-btn');
+  if (nxt) nxt.onclick = () => {
+    if (state.qIdx+1 < totalQ()) { state.qIdx++; render(); }
+    else { state.view = 'summary'; render(); }
+  };
+}
+
+function renderSummary(){
+  const c = DATA.chapters[state.chapterIdx];
+  document.getElementById('site-sub').textContent = c.name;
+  // 今回のセットだけ集計
+  const nums = state.mode === 'review' ? state.reviewPool : c.questions.map(q=>q.num);
+  let correct = 0, answered = 0;
+  for (const n of nums) {
+    const pr = (progress[c.name]||{})[n];
+    if (pr && pr.correct !== null) {
+      answered++;
+      if (pr.correct) correct++;
+    }
+  }
+  const pct = answered ? Math.round(correct/answered*100) : 0;
+  const wrong = wrongNums(c);
+  app.innerHTML = `
+    <div class="crumbs"><a id="home-link">← 章一覧</a></div>
+    <div class="summary">
+      <h2>${escapeHtml(c.name)} ${state.mode==='review'?'（復習）':''} おつかれさま</h2>
+      <div class="score">${correct} / ${answered}</div>
+      <div class="muted">正答率 ${pct}%</div>
+      <div class="chapter-actions" style="justify-content:center; margin-top: 20px;">
+        ${wrong.length ? `<button class="btn primary" id="review-btn">間違えた${wrong.length}問を復習</button>` : ''}
+        <button class="btn" id="restart-btn">最初からやり直す</button>
+        <button class="btn ghost" id="back-btn">章一覧に戻る</button>
+      </div>
+    </div>`;
+  document.getElementById('home-link').onclick = () => { state.view='home'; render(); };
+  document.getElementById('back-btn').onclick = () => { state.view='home'; render(); };
+  document.getElementById('restart-btn').onclick = () => {
+    // この章の進捗だけクリア
+    if (confirm('この章の進捗をリセットして最初からやり直します。よろしいですか？')) {
+      progress[c.name] = {}; saveProgress();
+      state.mode = 'all'; state.qIdx = 0; state.view='quiz'; render();
+    }
+  };
+  const rb = document.getElementById('review-btn');
+  if (rb) rb.onclick = () => {
+    state.mode = 'review'; state.reviewPool = wrong;
+    // 間違えた問題の進捗をクリアして再挑戦
+    for (const n of wrong) { if (progress[c.name] && progress[c.name][n]) progress[c.name][n] = {attempts: progress[c.name][n].attempts||0, correct:null, lastAnswer:null}; }
+    saveProgress();
+    state.qIdx = 0; state.view='quiz'; render();
+  };
+}
+
+function escapeHtml(s) {
+  if (s == null) return '';
+  return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+/* === 起動 === */
+fetch('quiz.json?v=' + Date.now())
+  .then(r => r.json())
+  .then(d => { DATA = d; render(); })
+  .catch(err => {
+    app.innerHTML = `<div style="color:var(--ng)">データ読み込みエラー: ${err}</div>`;
+  });
+</script>
+</body>
+</html>
