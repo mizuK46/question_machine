@@ -268,13 +268,13 @@ function renderQuiz(){
   const correctAvailable = q.correct != null;
 
   let choicesHtml = '';
-  for (let i=1;i<=5;i++){
+  for (let i=0; i<q.choices.length; i++){
     let cls = '';
     if (answered) {
       if (i === q.correct) cls = 'correct';
       else if (i === pr.lastAnswer) cls = 'wrong';
     }
-    choicesHtml += `<button data-c="${i}" class="${cls}">${i}</button>`;
+    choicesHtml += `<button data-c="${i}" class="${cls}">${q.choices[i]}</button>`;
   }
 
   let resultHtml = '';
