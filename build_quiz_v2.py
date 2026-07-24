@@ -118,8 +118,10 @@ def parse_choices(text_lines):
 
     # パターン2&3: 縦並び（表形式または箇条書き）
     # 「１」「２」「３」「４」「５」で始まる行を探す
+    # 選択肢が複数行にまたがる場合も考慮
     choice_lines = {}
     first_choice_idx = None
+    current_choice_num = None
 
     for i, ln in enumerate(text_lines):
         nln = norm_num_str(ln).strip()
@@ -130,8 +132,14 @@ def parse_choices(text_lines):
             rest = match.group(2).strip().replace('　', ' ').strip()
             if num not in choice_lines:
                 choice_lines[num] = rest
+                current_choice_num = num
                 if first_choice_idx is None:
                     first_choice_idx = i
+        elif current_choice_num is not None and nln and not re.match(r'^[1-5]\s', nln):
+            # 選択肢番号で始まらない非空行 → 直前の選択肢に追加
+            # ただし次の選択肢が来る前まで
+            if nln.startswith('「') or nln.startswith('『') or len(nln) > 3:
+                choice_lines[current_choice_num] += nln
 
     # 5つ全部揃ってるか確認
     if all(str(k) in choice_lines for k in range(1, 6)) and first_choice_idx is not None:

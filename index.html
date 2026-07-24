@@ -284,7 +284,7 @@ function renderQuiz(){
       <div class="result ${ok?'ok':'ng'}">
         <div class="rh">
           ${ok ? '正解 ✓' : '不正解 ✗'}
-          ${correctAvailable ? `— 正解は <b>${q.correct}</b>` : ''}
+          ${correctAvailable && q.choices && q.choices[q.correct] ? `— 正解は <b>${escapeHtml(q.choices[q.correct])}</b>` : ''}
           ${pr.attempts>1 ? `<span class="pill">${pr.attempts}回目</span>`:''}
         </div>
         <div class="expl">${escapeHtml(q.explanation || '（解説なし）')}</div>
